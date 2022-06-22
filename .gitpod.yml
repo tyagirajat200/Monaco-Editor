@@ -1,0 +1,20 @@
+
+tasks:
+  - name: 'Terminal 1'
+    openMode: split-left
+    before: npm install -g @angular/cli
+    init: npm install # runs during prebuild
+    command: npm start
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 4200
+    visibility: public
+
+vscode:
+  extensions:
+    - Angular.ng-template
+    - Mikael.Angular-BeastCode
+    - ecmel.vscode-html-css
+    - Zignd.html-css-class-completion
+    - ms-vscode.vscode-typescript-tslint-plugin

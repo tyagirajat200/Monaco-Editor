@@ -1,0 +1,37 @@
+<mat-form-field class="select-language mb-4 w-25 m-auto" appearance="outline">
+    <mat-select [(ngModel)]="language" placeholder="Language" panelClass="language_select_panel">
+        <mat-option *ngFor="let language of technologies; let i = index" [value]="language">
+            {{ language.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<div class='h-75 w-75 coding-editor-container m-auto'>
+    <div #container ktMonacoRisize (constainerResized)="onResized()" (windowResized)='onResized()'
+        class='position-relative coding-editor-container__resizable'>
+        <div class="editor-wrapper" [style.maxWidth.px]="container.offsetWidth"
+            [style.maxHeight.px]="container.offsetHeight">
+            <div #editor id="editor"></div>
+        </div>
+        <div class='overlay-loader' *ngIf="loading && loadingMsg">
+            <div class="h-100-p d-flex justify-content-between align-items-center">
+                {{ loadingMsg }}
+            </div>
+        </div>
+    </div>
+    <div class="coding-editor-container__footer" *ngIf="!loading">
+        <div class="autocomplete-status d-flex" [style.visibility]="lspStatus ? 'visible' : 'hidden'">
+            <div class="status-icon mr-2">
+                <i class="fas fa-check-circle text-success" *ngIf="lspStatus === AUTOCOMPLETE_STATUS.READY.name"></i>
+                <i class="fas fa-exclamation-circle text-warning"
+                    *ngIf="lspStatus === AUTOCOMPLETE_STATUS.ERROR.name"></i>
+                <mat-spinner [diameter]="13" class="mat-spinner-color"
+                    *ngIf="lspStatus === AUTOCOMPLETE_STATUS.PENDING.name">
+                </mat-spinner>
+            </div>
+            <span>{{AUTOCOMPLETE_STATUS[lspStatus]?.text }}</span>
+        </div>
+        <div class="cursor-position" *ngIf="position">
+            Line: {{position.lineNumber}} Col: {{position.column}}
+        </div>
+    </div>
+</div>
