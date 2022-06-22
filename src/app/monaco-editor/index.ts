@@ -1,8 +1,6 @@
-import { MonacoEditorConstructionOptions } from '@materia-ui/ngx-monaco-editor';
+import { editor } from "monaco-editor";
 
-
-export const DEFAULT_INIT_EDITOR_OPTIONS: MonacoEditorConstructionOptions & monaco.editor.ITextModelUpdateOptions = {
-    language: 'text',
+export const DEFAULT_INIT_EDITOR_OPTIONS: editor.IEditorOptions & editor.IGlobalEditorOptions = {
     wordWrap: 'on',
     minimap: { enabled: false },
     roundedSelection: true,
@@ -43,5 +41,5 @@ export const AUTOCOMPLETE_STATUS = {
 
 
 // export const WORKSPACE = '/workspace/language-server/project';
- export const WORKSPACE = '/workspace/Language-Servers-Testing/project';
+export const WORKSPACE = '/workspace/Language-Servers-Testing/project';
 // export const WORKSPACE = '/var/app/current/project';

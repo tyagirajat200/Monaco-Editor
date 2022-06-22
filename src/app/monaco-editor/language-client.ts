@@ -4,6 +4,7 @@ import { CloseAction, Disposable, ErrorAction, MessageTransports, MonacoLanguage
 import ReconnectingWebSocket, { Options } from 'reconnecting-websocket';
 import { AUTOCOMPLETE_STATUS, WORKSPACE } from '.';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codingame/monaco-jsonrpc';
+import { Uri } from 'monaco-editor';
 
 export class LanguageClient {
     private websocket: ReconnectingWebSocket;
@@ -121,7 +122,7 @@ export class LanguageClient {
             name: `${language} Client`,
             clientOptions: {
                 documentSelector: [language],
-                workspaceFolder: { uri: monaco.Uri.file(WORKSPACE), name: WORKSPACE, index: 0 },
+                workspaceFolder: { uri: Uri.file(WORKSPACE), name: WORKSPACE, index: 0 },
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
                     closed: () => ({ action: CloseAction.DoNotRestart })
