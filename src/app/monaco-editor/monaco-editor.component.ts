@@ -8,6 +8,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { editor_lang } from './language';
 import loader from '@monaco-editor/loader';
 import { editor, IDisposable, languages, Position, Uri } from 'monaco-editor';
+import { MonacoLoaderService } from './monaco-loader.service';
 
 @Component({
   selector: 'cj-monaco-editor',
@@ -34,9 +35,9 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this._language = x;
     this.resetPads();
     if (x) {
-      loader.config({ paths: { vs: 'assets/monaco-editor/min/vs' } });
-      loader.init().then(() => this.initMonaco(x));
-      // this.languageChangeSubs = this.monacoLoader.isMonacoLoaded$.pipe(filter(isLoaded => isLoaded), take(1), delay(500)).subscribe(() => this.initMonaco(x));
+      if (x) {
+        this.cancelableMonaco = this.monacoLoader.isMonacoLoaded$.pipe(filter(isLoaded => isLoaded), take(1), delay(500)).subscribe(() => this.initMonaco(x));
+      }
     }
   }
 
@@ -52,7 +53,7 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
 
   changeContentSubs!: IDisposable;
   changeCursorSubs!: IDisposable;
-  languageChangeSubs!: Subscription;
+  cancelableMonaco!: Subscription;
   lspClient!: LanguageClient;
   model!: editor.ITextModel;
 
@@ -68,7 +69,8 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
   private _unsubcribeAll!: Subject<any>;
 
   constructor(
-    private cd: ChangeDetectorRef) {
+    private cd: ChangeDetectorRef,
+    private monacoLoader: MonacoLoaderService) {
   }
 
   ngOnInit(): void {
@@ -143,7 +145,7 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this.codeEditor?.dispose();
     const model = this.model;
     setTimeout(() => model?.dispose())
-    this.languageChangeSubs?.unsubscribe();
+    this.cancelableMonaco?.unsubscribe();
     this.changeContentSubs?.dispose();
     this.changeCursorSubs?.dispose();
     this.codeEditor = null!;
