@@ -90,7 +90,7 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this.model = monaco.editor.createModel(attributes.stub, lang_id, monaco.Uri.file(`${WORKSPACE}/${lang_id === 'java' ? 'Main' : 'tmp'}.${fileExtension}`));
     this.codeEditor = monaco.editor.create(this.editorEle.nativeElement, { ...this.options, model: this.model, theme: 'vs-dark' });
     monaco.languages.register({ id: lang_id, extensions: [fileExtension] });
-    MonacoServices.install(monaco as any, { rootUri: 'file://' + WORKSPACE });
+    MonacoServices.install({ rootPath: monaco.Uri.file(WORKSPACE).toString() });
     this.changeContentSubs = this.codeEditor.onDidChangeModelContent(() => this.contentChange.emit(this.getValue()));
     this.changeCursorSubs = this.codeEditor.onDidChangeCursorPosition((e) => { this.position = e.position; this.cd.markForCheck(); });
     this.onResized();

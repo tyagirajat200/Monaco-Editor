@@ -27,11 +27,10 @@
     "bootstrap": "^4.5.0",
     "css-element-queries": "^1.2.3",
     "monaco-editor": "^0.33.0",
-    "monaco-languageclient": "1.1.0",
+    "monaco-languageclient": "^2.0.1",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
-    "vscode": "^1.1.37",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
