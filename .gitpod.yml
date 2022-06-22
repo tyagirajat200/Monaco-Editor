@@ -1,8 +1,7 @@
-
 tasks:
-  - name: 'Terminal 1'
+  - name: "Terminal 1"
     openMode: split-left
-    before: npm install -g @angular/cli
+    before: npm install -g @angular/cli rimraf
     init: npm install # runs during prebuild
     command: npm start
 
