@@ -16,8 +16,9 @@ export class MonacoLoaderService {
       loader.config({ paths: { vs: 'assets/monaco-editor/min/vs' } });
       loader.init().then(() => {
         (<any>window).monacoEditorAlreadyInitialized = true;
-        this.isMonacoLoaded$.next(true);
+        console.log('Monaco Initialized')
         MonacoServices.install({ rootPath: Uri.file(WORKSPACE).toString() });
+        this.isMonacoLoaded$.next(true);
       });
     } else {
       this.isMonacoLoaded$.next(true);

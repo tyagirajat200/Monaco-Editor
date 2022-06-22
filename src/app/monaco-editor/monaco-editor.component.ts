@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { filter, take, takeUntil, delay } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { MonacoServices } from 'monaco-languageclient';
 import { LanguageClient } from './language-client';
 import { DEFAULT_INIT_EDITOR_OPTIONS, AUTOCOMPLETE_STATUS, WORKSPACE } from '.';
 import { MatSelectChange } from '@angular/material/select';
 import { editor_lang } from './language';
-import loader from '@monaco-editor/loader';
 import { editor, IDisposable, languages, Position, Uri } from 'monaco-editor';
 import { MonacoLoaderService } from './monaco-loader.service';
 
@@ -85,7 +83,6 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this.model = editor.createModel(attributes.stub, lang_id, Uri.file(`${WORKSPACE}/${lang_id === 'java' ? 'Main' : 'tmp'}.${fileExtension}`));
     this.codeEditor = editor.create(this.editorEle.nativeElement, { ...this.options, model: this.model, theme: 'vs-dark' });
     languages.register({ id: lang_id, extensions: [fileExtension] });
-    MonacoServices.install({ rootPath: Uri.file(WORKSPACE).toString() });
     this.changeContentSubs = this.codeEditor.onDidChangeModelContent(() => this.contentChange.emit(this.getValue()));
     this.changeCursorSubs = this.codeEditor.onDidChangeCursorPosition((e) => { this.position = e.position; this.cd.markForCheck(); });
     this.onResized();
