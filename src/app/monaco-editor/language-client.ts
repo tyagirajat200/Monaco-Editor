@@ -109,10 +109,10 @@ export class LanguageClient {
         await this.cleanClient();
         console.log(`closing websocket for ${this.lang_id}...`);
         this.websocket?.close(1000, 'FORCE');
-    }
+    } 
 
     private createUrl(languageExtension: string): string {
-        const url = 'wss://8080-tyagirajat2-languageser-661lgvo2y2x.ws-us47.gitpod.io/'
+        const url = 'wss://8080-tyagirajat2-languageser-661lgvo2y2x.ws-us49.gitpod.io/'
         const a = { "moduleId": 1, "sessionId": "8b79af30-1ea1-443b-ad9c-a7fc0581e22e", "deviceId": "45328266-afef-4492-b8e3-fb407b615ae8" }
         return url + `?lang=${languageExtension}&sessionId=${a.sessionId}&deviceId=${a.deviceId}&moduleId=${a.moduleId}`;
     }
