@@ -92,7 +92,6 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this.init.emit(this.codeEditor);
     this.lspClient = new LanguageClient(lang_id, this.codeEditor);
     this.lspClient.$lspStatus.subscribe((x: any) => { this.lspStatus = x; this.cd.markForCheck(); });
-    this.lspClient._onMessage.subscribe((x: any) => { console.log(x) }, () => { }, () => console.log('wfwefwefw'));
   }
 
 

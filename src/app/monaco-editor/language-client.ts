@@ -6,8 +6,8 @@ import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codin
 import { editor, Uri } from 'monaco-editor';
 import { AUTOCOMPLETE_STATUS, WORKSPACE } from '.';
 
-const RETRY_COUNT = 5;
-const IDLE_TIMEOUT = 5000;
+const RETRY_COUNT = 2;
+const IDLE_TIMEOUT = 2 * 60 * 1000;
 export class LanguageClient {
     private websocket: ReconnectingWebSocket;
     private languageClient: MonacoLanguageClient;
@@ -26,7 +26,7 @@ export class LanguageClient {
 
     $lspStatus = new BehaviorSubject<string>(null);
     _onMessage: Observable<any>;
-    _onClose: Observable<any>;
+    _onClose: Observable<CloseEvent>;
     _onOpen: Observable<any>;
 
     private _destroyAll = new Subject();
@@ -36,23 +36,24 @@ export class LanguageClient {
         this.lang_id = language;
         this.lspStatus = AUTOCOMPLETE_STATUS.PENDING.name;
         const url = this.createUrl(language);
+        console.log(`creating websocket for ${this.lang_id}...`);
         this.websocket = this.createWebSocket(url);
         this._onMessage = fromEvent<MessageEvent>(this.websocket, 'message').pipe(takeUntil(this._destroyAll), map(({ data }) => JSON.parse(data)), shareReplay(1));
-        this._onClose = fromEvent<MessageEvent>(this.websocket, 'close').pipe(takeUntil(this._destroyAll), shareReplay(1));
-        this._onOpen = fromEvent<MessageEvent>(this.websocket, 'open').pipe(takeUntil(this._destroyAll), shareReplay(1));
-
-        this._onClose.subscribe((e) => { console.log(e); e?.reason !== 'FORCE' && this.updateLspStatus(null, true) }, () => { }, () => console.log('Unsubscribe'));
+        this._onClose = fromEvent<CloseEvent>(this.websocket, 'close').pipe(takeUntil(this._destroyAll), shareReplay(1));
+        this._onOpen = fromEvent<Event>(this.websocket, 'open').pipe(takeUntil(this._destroyAll), shareReplay(1));
+        this._onClose.subscribe((e) => e?.reason !== 'FORCE' && this.updateLspStatus(null, true));
         this.startTimer();
         this.contentChangeSubs = codeEditor.onDidChangeModelContent(() => this.startTimer());
         this._onOpen.subscribe(async () => {
-            console.log(`socket connection successfull, starting language client for ${this.lang_id}...`);
+            // tslint:disable-next-line: max-line-length
+            console.log(`${this.websocket.retryCount ? `retrying count:${this.websocket.retryCount}` : ''} socket connection successfull, starting language client for ${this.lang_id}...`);
             await this.cleanClient();
             const socket = toSocket(this.websocket as any);
             this.reader = new WebSocketMessageReader(socket);
             this.writer = new WebSocketMessageWriter(socket);
             this.languageClient = this.createLanguageClient({ reader: this.reader, writer: this.writer }, language);
             this.onDidChangeStateSubs = this.languageClient.onDidChangeState((s) => this.updateLspStatus(s));
-            this.languageClient.setTrace(0);
+            await this.languageClient.setTrace(0);
             this.languageClient.start();
         });
     }
@@ -60,7 +61,7 @@ export class LanguageClient {
 
     private startTimer(): void {
         this.timer?.unsubscribe();
-        this.timer = timer(IDLE_TIMEOUT).subscribe(() => { console.log('No activity!'); this.stopClient(); });
+        this.timer = timer(IDLE_TIMEOUT).subscribe(() => { console.log('No Activity!'); this.stopClient(); });
         if (this.lspStatus === AUTOCOMPLETE_STATUS.ERROR.name || this.lspStatus === AUTOCOMPLETE_STATUS.STOPPED.name) {
             this.lspStatus = AUTOCOMPLETE_STATUS.PENDING.name;
             this.websocket.reconnect();
@@ -69,7 +70,7 @@ export class LanguageClient {
 
 
     private updateLspStatus(state: StateChangeEvent, isSocketClosed?: boolean): void {
-        if (this.websocket.retryCount === RETRY_COUNT) {
+        if (this.websocket.retryCount === RETRY_COUNT && isSocketClosed) {
             this.lspStatus = AUTOCOMPLETE_STATUS.ERROR.name;
         } else if (state?.newState === State.Starting || isSocketClosed) {
             this.lspStatus = AUTOCOMPLETE_STATUS.PENDING.name;
@@ -81,27 +82,32 @@ export class LanguageClient {
 
     async cleanClient(): Promise<void> {
         try {
-            const languageClient = this.languageClient;
-            if (languageClient?.needsStop()) { await languageClient?.stop(); }
-        } finally {
+            await this.languageClient?.stop();
+        }
+        catch (err) { }
+        finally {
             this.onDidChangeStateSubs?.dispose();
             this.reader?.dispose();
             this.writer?.dispose();
         }
+        return Promise.resolve();
     }
 
 
     async stopClient(clearListners?: boolean): Promise<void> {
-        console.log(`Closing webscoket and language client for ${this.lang_id}...`);
+        console.log(`closing language client for ${this.lang_id}...`);
         this.timer?.unsubscribe();
-        this.$lspStatus.next(AUTOCOMPLETE_STATUS.STOPPED.name);
         if (clearListners) {
+            this.$lspStatus.next(null);
             this.$lspStatus.complete();
             this.contentChangeSubs?.dispose();
             this._destroyAll.next();
             this._destroyAll.complete();
+        } else {
+            this.lspStatus = AUTOCOMPLETE_STATUS.STOPPED.name;
         }
         await this.cleanClient();
+        console.log(`closing websocket for ${this.lang_id}...`);
         this.websocket?.close(1000, 'FORCE');
     }
 
@@ -113,7 +119,7 @@ export class LanguageClient {
 
     private createWebSocket(socketUrl: string): ReconnectingWebSocket {
         const socketOptions: Options = {
-            maxReconnectionDelay: 10000,
+            maxReconnectionDelay: 20000,
             minReconnectionDelay: 3000,
             reconnectionDelayGrowFactor: 1.3,
             minUptime: 5000,
