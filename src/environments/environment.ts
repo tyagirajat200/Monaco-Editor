@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080'
+  apiUrl: 'wss://8080-tyagirajat2-languageser-661lgvo2y2x.ws-us49.gitpod.io/'
 };
 
 /*

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080'
+  apiUrl: 'wss://8080-tyagirajat2-languageser-661lgvo2y2x.ws-us49.gitpod.io/'
 };

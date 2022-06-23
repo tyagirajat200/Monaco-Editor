@@ -131,18 +131,18 @@ export const editor_lang = [
         "imageUrl": "https://s3.amazonaws.com/codejudge-core/tag/default_bg.jpeg",
         "attributes": "{\"lsp\": true, \"mime\": \"text/x-swift\", \"stub\": \"import Foundation\\r\\n\\r\\n/*\\r\\n * Complete the 'solution' function below.\\r\\n *\\r\\n * The function is expected to return an INTEGER.\\r\\n * The function accepts STRING a as parameter.\\r\\n */\\r\\n\\r\\nfunc solution(a: String) -> Int {\\r\\n    // Write your code here\\r\\n}\\r\\n\\r\\nlet a = readLine()\\r\\nlet result = solution(a: a!)\\r\\nprint(result)\\r\\n\", \"type\": \"SWIFT\", \"module\": \"ace/mode/swift\", \"monaco\": \"swift\", \"version\": \"\", \"extension\": \"swift\", \"version_v2\": \"(5.2.3)\", \"language_id\": \"\", \"mossLanguage\": \"swift\", \"stubLanguage\": \"swift\", \"fileExtension\": \"swift\", \"language_id_v2\": 83, \"judge_wall_time\": 25, \"isSonarSupported\": true, \"judge_extra_time\": 5, \"judge_time_limit\": 20, \"is_high_computing\": true, \"judge_stack_limit\": 256000, \"judge_memory_limit\": 512000, \"sonarPropertiesUrl\": \"https://codejudge-artifacts.s3.amazonaws.com/sonar/programming/swift.sonar-project.properties\", \"isPlagiarismSupported\": false, \"skipBuildAtPreProcessStage\": false, \"isMultipleSonarRunCompatible\": true}"
     },
-    // {
-    //     "id": 5098,
-    //     "name": "Bash 5.0.0",
-    //     "displayName": "Bash",
-    //     "tagType": {
-    //         "id": 53,
-    //         "name": "TECHNOLOGY_ATTR",
-    //         "displayName": "Technologies"
-    //     },
-    //     "imageUrl": "https://s3.amazonaws.com/codejudge-core/tag/default_bg.jpeg",
-    //     "attributes": "{\"lsp\": true, \"mime\": \"text/x-sh\", \"stub\": \"#!/bin/bash\\r\\n\\r\\n\", \"module\": \"ace/mode/sh\", \"monaco\": \"shell\", \"version\": \"\", \"extension\": \"sh\", \"version_v2\": \"(5.0.0)\", \"language_id\": \"\", \"mossLanguage\": \"sh\", \"fileExtension\": \"sh\", \"language_id_v2\": 46, \"judge_wall_time\": 25, \"judge_extra_time\": 5, \"judge_time_limit\": 20, \"is_high_computing\": true, \"judge_stack_limit\": 256000, \"judge_memory_limit\": 512000, \"isPlagiarismSupported\": false}"
-    // },
+    {
+        "id": 5098,
+        "name": "Bash 5.0.0",
+        "displayName": "Bash",
+        "tagType": {
+            "id": 53,
+            "name": "TECHNOLOGY_ATTR",
+            "displayName": "Technologies"
+        },
+        "imageUrl": "https://s3.amazonaws.com/codejudge-core/tag/default_bg.jpeg",
+        "attributes": "{\"lsp\": true, \"mime\": \"text/x-sh\", \"stub\": \"#!/bin/bash\\r\\n\\r\\n\", \"module\": \"ace/mode/sh\", \"monaco\": \"shell\", \"version\": \"\", \"extension\": \"sh\", \"version_v2\": \"(5.0.0)\", \"language_id\": \"\", \"mossLanguage\": \"sh\", \"fileExtension\": \"sh\", \"language_id_v2\": 46, \"judge_wall_time\": 25, \"judge_extra_time\": 5, \"judge_time_limit\": 20, \"is_high_computing\": true, \"judge_stack_limit\": 256000, \"judge_memory_limit\": 512000, \"isPlagiarismSupported\": false}"
+    },
     {
         "id": 5100,
         "name": "Kotlin 1.3.70",

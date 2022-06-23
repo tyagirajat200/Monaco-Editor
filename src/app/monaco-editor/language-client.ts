@@ -5,6 +5,7 @@ import ReconnectingWebSocket, { Options } from 'reconnecting-websocket';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codingame/monaco-jsonrpc';
 import { editor, Uri } from 'monaco-editor';
 import { AUTOCOMPLETE_STATUS, WORKSPACE } from '.';
+import { environment } from 'src/environments/environment';
 
 const RETRY_COUNT = 2;
 const IDLE_TIMEOUT = 2 * 60 * 1000;
@@ -112,9 +113,8 @@ export class LanguageClient {
     } 
 
     private createUrl(languageExtension: string): string {
-        const url = 'wss://8080-tyagirajat2-languageser-661lgvo2y2x.ws-us49.gitpod.io/'
         const a = { "moduleId": 1, "sessionId": "8b79af30-1ea1-443b-ad9c-a7fc0581e22e", "deviceId": "45328266-afef-4492-b8e3-fb407b615ae8" }
-        return url + `?lang=${languageExtension}&sessionId=${a.sessionId}&deviceId=${a.deviceId}&moduleId=${a.moduleId}`;
+        return environment.apiUrl + `?lang=${languageExtension}&sessionId=${a.sessionId}&deviceId=${a.deviceId}&moduleId=${a.moduleId}`;
     }
 
     private createWebSocket(socketUrl: string): ReconnectingWebSocket {
