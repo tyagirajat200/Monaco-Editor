@@ -24,18 +24,19 @@ export const DEFAULT_INIT_EDITOR_OPTIONS: editor.IEditorOptions & editor.IGlobal
 export const AUTOCOMPLETE_STATUS = {
     PENDING: {
         name: 'PENDING',
-        text: 'Autocomplete Loading...',
-        status: 'pending'
+        text: 'Autocomplete Loading...'
     },
     READY: {
         name: 'READY',
-        text: 'Autocomplete Ready',
-        status: 'ready'
+        text: 'Autocomplete Ready'
     },
     ERROR: {
         name: 'ERROR',
-        text: 'Autocomplete Failed',
-        status: 'error'
+        text: 'Autocomplete Failed'
+    },
+    STOPPED: {
+        name: 'STOPPED',
+        text: 'Autocomplete Stopped'
     }
 };
 

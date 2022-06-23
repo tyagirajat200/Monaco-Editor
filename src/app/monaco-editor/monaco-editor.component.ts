@@ -90,8 +90,9 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
     this.setFontSize(this.selectedFontSize);
     this.setTabSize(this.selectedTabsize);
     this.init.emit(this.codeEditor);
-    this.lspClient = new LanguageClient(lang_id);
+    this.lspClient = new LanguageClient(lang_id, this.codeEditor);
     this.lspClient.$lspStatus.subscribe((x: any) => { this.lspStatus = x; this.cd.markForCheck(); });
+    this.lspClient._onMessage.subscribe((x: any) => { console.log(x) }, () => { }, () => console.log('wfwefwefw'));
   }
 
 
@@ -135,7 +136,7 @@ export class MonacoEditorComponent implements OnInit, OnDestroy {
 
 
   resetPads(): void {
-    this.lspClient?.stop();
+    this.lspClient?.stopClient(true);
     // this.monacoServices?.dispose();
     this.lspClient = null!;
     this.codeEditor?.setModel(null);
